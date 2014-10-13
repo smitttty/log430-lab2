@@ -84,7 +84,11 @@ public class Executive extends Communication {
 				break;
 				
 			case '6':
-				signalReceivers("ListProjectsAssignedToResourceComponent");
+				System.out.println("You hit option 6");
+			break;
+			
+			case '7':
+				System.out.println("You hit option 7");
 			break;
 
 			case 'X':
