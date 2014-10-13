@@ -58,6 +58,8 @@ public class Executive extends Communication {
 		addToReceiverList("ListProjectsAssignedToResourceComponent");
 		addToReceiverList("ListResourcesAssignedToProjectComponent");
 		addToReceiverList("AssignResourceToProject");
+		addToReceiverList("ListPreviousProjectsAssignedToPreviousResourceComponent"); //mod 1 (case 6) (option 6)
+		addToReceiverList("ListPreviousAndCurrentResourcesAssignedToProjectComponent"); //mod 2 (case 7) (ption 7)
 
 		while (!done) {
 			userChoice = menu.mainMenu();
@@ -84,11 +86,11 @@ public class Executive extends Communication {
 				break;
 				
 			case '6':
-				System.out.println("You hit option 6");
+				signalReceivers("ListPreviousProjectsAssignedToPreviousResourceComponent");
 			break;
 			
 			case '7':
-				System.out.println("You hit option 7");
+				signalReceivers("ListPreviousAndCurrentResourcesAssignedToProjectComponent");
 			break;
 
 			case 'X':
