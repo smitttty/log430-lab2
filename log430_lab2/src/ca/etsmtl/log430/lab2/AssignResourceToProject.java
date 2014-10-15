@@ -1,5 +1,9 @@
 package ca.etsmtl.log430.lab2;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Observable;
 
 import ca.etsmtl.log430.common.Menus;
@@ -73,8 +77,10 @@ public class AssignResourceToProject extends Communication
 					 * If the selected project and resource exist, then complete
 					 * the assignment process.
 					 */
-					myProject.assignResource(myResource);
-					myResource.assignProject(myProject);
+					if(verifyResourceAvailability(myProject, myResource)){
+						myProject.assignResource(myResource);
+						myResource.assignProject(myProject);
+					}
 				} else {
 					System.out.println("\n\n *** Project not found ***");
 				} 
@@ -82,5 +88,97 @@ public class AssignResourceToProject extends Communication
 				System.out.println("\n\n *** Resource not found ***");
 			}
 		}
+	}
+	
+	public boolean verifyResourceAvailability(Project project, Resource resource){
+		
+		if (resource != null) {
+			if (project != null) {
+				
+				int overcharge = 0; //variable used to verify how busy an employee is for a set of dates
+				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				Date newProjectStart = null;
+				Date newProjectEnd = null;
+				Date oldProjectStart = null;
+				Date oldProjectEnd = null;
+				boolean alreadyAssigned = false; //boolean used to determine if the project has already been assigned to the resource
+				
+				try {
+					newProjectStart = formatter.parse(project.getStartDate());
+					newProjectEnd = formatter.parse(project.getEndDate());
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}				
+
+				Project projectAlreadyAssigned = resource.getProjectsAssigned().getNextProject();
+				
+				//loop that calculates the amount of work for the resource in the given set of dates
+				while (projectAlreadyAssigned != null && !alreadyAssigned) {
+					alreadyAssigned = false;
+						try {
+							oldProjectStart = formatter.parse(projectAlreadyAssigned.getStartDate());
+							oldProjectEnd = formatter.parse(projectAlreadyAssigned.getEndDate());
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						
+						if(projectAlreadyAssigned.getID().equalsIgnoreCase(project.getID()))
+						{
+							alreadyAssigned = true;
+						}
+						else
+						{
+							if ((newProjectStart.after(oldProjectStart) && newProjectStart.before(oldProjectEnd)) | (newProjectEnd.after(oldProjectStart) && newProjectEnd.before(oldProjectEnd)))
+								{
+									if(projectAlreadyAssigned.getPriority().compareToIgnoreCase("H") == 0 )
+									{
+									overcharge += 100;
+									} // if
+									if(projectAlreadyAssigned.getPriority().compareToIgnoreCase("M") == 0 )
+									{
+									overcharge += 50;
+									} // if
+									if(projectAlreadyAssigned.getPriority().compareToIgnoreCase("L") == 0 )
+									{
+									overcharge += 25;
+									} // if
+								}
+						}
+					projectAlreadyAssigned = resource.getProjectsAssigned().getNextProject();
+					
+				} // while
+				
+				
+				//Adds the load of work for the new project to the overcharge variable
+				
+				if(project.getPriority().compareToIgnoreCase("H") == 0 )
+				{
+				overcharge += 100;
+				} // if
+				if(project.getPriority().compareToIgnoreCase("M") == 0 )
+				{
+				overcharge += 50;
+				} // if
+				if(project.getPriority().compareToIgnoreCase("L") == 0 )
+				{
+				overcharge += 25;
+				} // if
+				
+				//if statement to verify that the employee is not overcharged or is not already assigned to the project
+				if(overcharge > 100 | alreadyAssigned)
+				{					
+					System.out.println("Project could not be assigned to the resource selected because the resource is already overcharged or is already assigned to the project selected.");
+					return false;
+				}
+				else
+				{					
+					System.out.println("Project assigned to selected resource.");
+					return true;
+				}
+				
+		} // if
+		}
+		return false;
+		
 	}
 }
