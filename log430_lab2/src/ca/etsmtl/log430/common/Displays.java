@@ -1,6 +1,8 @@
 package ca.etsmtl.log430.common;
 
 
+
+
 /**
  * This class displays various types of information on projects and resources
  * (individually and as lists) to the screen.
@@ -98,7 +100,7 @@ public class Displays {
 		boolean done;
 		Resource resource;
 
-		System.out.println("\nResources assigned to: " + " "
+		System.out.println("\nResources currently assigned to: " + " "
 				+ project.getID() + " " + project.getProjectName() + " :");
 		lineCheck(1);
 
@@ -167,6 +169,114 @@ public class Displays {
 
 	}
 
+	/**
+	 * Lists the projects currently assigned to a resource before this session.
+	 * 
+	 * @param resource
+	 */
+	public void displayProjectsAlreadyAssignedToResource(Resource resource, ProjectList list) {
+
+		boolean done;
+		Project project;
+
+		System.out.println("\nProjects assigned (in this session) to : "
+				+ resource.getFirstName() + " " + resource.getLastName() + " "
+				+ resource.getID());
+		lineCheck(2);
+		System.out
+				.println("========================================================= ");
+		lineCheck(1);
+
+		resource.getPreviouslyAssignedProjectList().goToFrontOfList();
+		done = false;
+
+		while (!done) {
+
+			project = resource.getPreviouslyAssignedProjectList().getNextProject();
+
+			if (project == null) {
+				
+				done = true;
+
+			} else {	
+				
+				Project projectInfo = list.findProjectByID(project.getID());
+				
+				if(projectInfo == null){
+					done = true;
+				} else {
+					
+					displayProject(projectInfo);
+					lineCheck(2);
+
+				} // if
+			} //if
+		} // while
+
+	}
+	
+	
+	public void displayResourcesAlreadyAssignedToProject(String projectSelectedID, ResourceList resourcelist) {
+
+		boolean doneResourceList;
+		Resource resource;
+		
+		System.out.println("\nResources assigned previously to: " +  projectSelectedID);
+		lineCheck(2);
+		System.out.println("========================================================= ");
+		lineCheck(1);
+
+		resourcelist.goToFrontOfList();
+
+		doneResourceList = false;
+
+		while (!doneResourceList) {
+
+			resource = resourcelist.getNextResource();
+			if (resource == null) {
+
+				doneResourceList = true;
+
+			} else {
+
+				ProjectList projectList = resource.getPreviouslyAssignedProjectList();
+				
+				//loop through projectList to see if the projectid matches the current resouce
+				boolean doneProjectList;
+				Project project;
+
+				System.out.print("\n");
+				lineCheck(1);
+
+				projectList.goToFrontOfList();
+				doneProjectList = false;
+
+				while (!doneProjectList) {
+
+					project = projectList.getNextProject();
+
+					if (project == null) {
+						doneProjectList = true;
+
+					} else {
+
+						if(project.getID().equalsIgnoreCase(projectSelectedID))
+							displayResource(resource);
+
+					} // if
+
+				} // while
+				
+				
+				//displayProjectList(resource.getPreviouslyAssignedProjectList());//for debgging
+				lineCheck(1);
+
+			} // if
+
+		} // while
+
+	}
+	
 	/**
 	 * Displays the resources in a resource list. Displays the same information
 	 * that is listed in the displayResource() method listed above.

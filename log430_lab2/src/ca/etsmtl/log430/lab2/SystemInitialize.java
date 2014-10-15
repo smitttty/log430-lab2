@@ -44,6 +44,8 @@ public class SystemInitialize {
 		new ListProjects(new Integer(102), "ListProjectsComponent");
 		new ListProjectsAssignedToResource(new Integer(103), "ListProjectsAssignedToResourceComponent");
 		new ListResourcesAssignedToProject(new Integer(104), "ListResourcesAssignedToProjectComponent");
+		new ListPreviousProjectsAssignedToPreviousResource(new Integer(106), "ListPreviousProjectsAssignedToPreviousResourceComponent");
+		new ListPreviousAndCurrentResourcesAssignedToProject(new Integer(107), "ListPreviousAndCurrentResourcesAssignedToProjectComponent");
 
 		Executive executiveComponent = new Executive(new Integer(105),"ExecutiveComponent");
 

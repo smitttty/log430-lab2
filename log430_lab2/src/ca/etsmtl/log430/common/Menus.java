@@ -49,9 +49,10 @@ public class Menus {
 			System.out.println("3) List projects currently assigned to a resource");
 			System.out.println("4) List resources currently assigned to a project");
 			System.out.println("5) Assign a resource to a project");
+			System.out.println("6) List previously assigned projects assigned to a previous resource");
+			System.out.println("7) List previous and current roles for a specific project");
 			System.out.println("X) Exit");
 			System.out.print("\n\nEnter your choice and press return >> ");
-
 			userChoice = terminal.keyboardReadChar();
 
 			if ((userChoice != 'X') && (userChoice != 'x')
